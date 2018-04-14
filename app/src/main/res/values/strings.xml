@@ -3,4 +3,13 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="위치설정">위치설정</string>
+    <string name="랭킹">랭킹</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home_button">Home Button</string>
+    <string name="pindrop_button">PinDrop Button</string>
+    <string name="ranking_button">Ranking Button</string>
+    <string name="홈">홈</string>
 </resources>
