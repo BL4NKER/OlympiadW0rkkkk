@@ -12,4 +12,6 @@
     <string name="pindrop_button">PinDrop Button</string>
     <string name="ranking_button">Ranking Button</string>
     <string name="홈">홈</string>
+    
+    <string name="facebook_app_id">2049903541894471</string>
 </resources>

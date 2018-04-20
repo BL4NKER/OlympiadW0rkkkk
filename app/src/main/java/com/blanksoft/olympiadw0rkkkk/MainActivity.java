@@ -1,5 +1,6 @@
 package com.blanksoft.olympiadw0rkkkk;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -24,13 +25,13 @@ public class MainActivity extends AppCompatActivity {
 
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    transaction.replace(R.id.content,new HomeFragment()).commit();
+                    transaction.replace(R.id.content, new HomeFragment()).commit();
                     return true;
                 case R.id.navigation_pin_drop:
-                    transaction.replace(R.id.content,new PinDropFragment()).commit();
+                    transaction.replace(R.id.content, new PinDropFragment()).commit();
                     return true;
                 case R.id.navigation_ranking_chart:
-                    transaction.replace(R.id.content,new RankingFragment()).commit();
+                    transaction.replace(R.id.content, new RankingFragment()).commit();
                     return true;
             }
             return false;
@@ -47,7 +48,22 @@ public class MainActivity extends AppCompatActivity {
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.content,new HomeFragment()).commit();
+        transaction.replace(R.id.content, new HomeFragment()).commit();
+
+
+        TextView idText = (TextView) findViewById(R.id.idText);
+        TextView passwordText = (TextView) findViewById(R.id.passwordText);
+        TextView welcomemessage = (TextView)findViewById(R.id.welcomeMessage);
+
+        Intent intent = getIntent();
+        String userID = intent.getStringExtra("userID");
+        String userPassword = intent.getStringExtra("userPassword");
+        String message = "환영합니다, " + userID + "님!";
+
+        idText.setText(userID);
+        passwordText.setText(userPassword);
+        welcomemessage.setText(message);
     }
 
-}
+    }
+
