@@ -1,6 +1,7 @@
 package com.blanksoft.olympiadw0rkkkk;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,12 +17,15 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -41,6 +45,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -76,6 +81,12 @@ public class PinDropFragment extends Fragment
     private LatLng[] LikelyLatLngs = null;
 
     static View layout;
+    LocationRequest locationRequest = new LocationRequest();
+    LocationManager locationManager;
+    Location location;
+    Place place;
+    LatLng currentLocation;
+    Button button2;
 
     public PinDropFragment()
     {
@@ -87,7 +98,8 @@ public class PinDropFragment extends Fragment
 
         if ( location != null) {
             //현재위치의 위도 경도 가져옴
-            LatLng currentLocation = new LatLng( location.getLatitude(), location.getLongitude());
+            currentLocation = new LatLng( location.getLatitude(), location.getLongitude());
+            Log.d(TAG, "setCurrentLocation: " + currentLocation);
 
             //MarkerOptions markerOptions = new MarkerOptions();
             // markerOptions.position(currentLocation);
@@ -97,7 +109,9 @@ public class PinDropFragment extends Fragment
             //markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
             //currentMarker = this.googleMap.addMarker(markerOptions);
 
+
             this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+            Log.d(TAG, "setCurrentLocation: 야야야야야야야야야야야");
             return;
         }
 
@@ -112,19 +126,24 @@ public class PinDropFragment extends Fragment
         this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(DEFAULT_LOCATION));
     }
 
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (layout != null) {
-            ViewGroup parent = (ViewGroup) layout.getParent();
-            if (parent != null)
-                parent.removeView(layout);
-        }
+        //if (layout != null) {
+        //    ViewGroup parent = (ViewGroup) layout.getParent();
+        //    if (parent != null)
+        //        parent.removeView(layout);
+        //}
+        //container.removeAllViews();
         try {
             layout = inflater.inflate(R.layout.fragment_pin_drop, container, false);
         } catch (InflateException e) {
@@ -132,6 +151,15 @@ public class PinDropFragment extends Fragment
         }
 
         //View layout = inflater.inflate(R.layout.fragment_pin_drop, container, false);
+        button2 = (Button)layout.findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMyLocation();
+                searchCurrentPlaces();
+
+            }
+        });
 
         mapView = (MapView)layout.findViewById(R.id.map);
         mapView.getMapAsync(this);
@@ -142,7 +170,7 @@ public class PinDropFragment extends Fragment
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                Location location = new Location("");
+                location = new Location("");
                 location.setLatitude(place.getLatLng().latitude);
                 location.setLongitude(place.getLatLng().longitude);
 
@@ -154,9 +182,10 @@ public class PinDropFragment extends Fragment
                 Log.i(TAG, "An error occurred: " + status);
             }
         });
-
+        Log.d(TAG, "setCurrentLocation: 알랄ㄹ랄라");
         return layout;
     }
+
 
     @Override
     public void onStart() {
@@ -168,9 +197,6 @@ public class PinDropFragment extends Fragment
     public void onStop() {
         super.onStop();
         mapView.onStop();
-
-        if ( googleApiClient != null && googleApiClient.isConnected())
-            googleApiClient.disconnect();
     }
 
     @Override
@@ -182,23 +208,40 @@ public class PinDropFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+
         mapView.onResume();
+        Log.d(TAG, "setMyLocation: resume");
+       // googleMap.moveCamera(CameraUpdateFactory.newLatLng(DEFAULT_LOCATION));
 
-        if ( googleApiClient != null)
-            googleApiClient.connect();
+        if(googleApiClient != null)
+            mapView.getMapAsync(this);
+        //setMyLocation();
+          // setCurrentLocation(location, place.getName().toString(), place.getAddress().toString());
+        
 
+
+      //  setCurrentLocation(location,place.getName().toString(), place.getAddress().toString());
+
+        //if ( googleMap!=null)
+            //setCurrentLocation(location,place.getName().toString(), place.getAddress().toString());
+            //searchCurrentPlaces();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        googleApiClient.stopAutoManage(getActivity());
-        mapView.onPause();
+        //googleApiClient.stopAutoManage(getActivity());
+         mapView.onPause();
+
 
         if ( googleApiClient != null && googleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-            googleApiClient.disconnect();
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+        googleApiClient.stopAutoManage(getActivity());
+        googleApiClient.disconnect();
         }
+        //if (googleMap != null) {
+        //    googleMap = null;
+        //}
     }
 
     @Override
@@ -218,10 +261,25 @@ public class PinDropFragment extends Fragment
 
             if ( googleApiClient.isConnected()) {
                 LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+                //googleApiClient.stopAutoManage(getActivity());
                 googleApiClient.disconnect();
             }
         }
     }
+
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (getActivity() != null) {
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            Fragment fragment = fragmentManager.findFragmentById(R.id.place_autocomplete_fragment);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            //fragmentTransaction.remove(fragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -249,8 +307,16 @@ public class PinDropFragment extends Fragment
         googleMap.getUiSettings().setCompassEnabled(true);
         // 매끄럽게 이동함
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        setMyLocation();
 
+
+
+
+    }
+    private void setMyLocation(){
         //  API 23 이상이면 런타임 퍼미션 처리 필요
+        Log.d(TAG, "setMyLocation: 함수 실행됨");
+        
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // 사용권한체크
             int hasFineLocationPermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
@@ -268,6 +334,7 @@ public class PinDropFragment extends Fragment
                 if ( ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                 {
                     googleMap.setMyLocationEnabled(true);
+                    Log.d(TAG, "setMyLocation: 현재위치");
                 }
             }
         } else {
@@ -278,25 +345,27 @@ public class PinDropFragment extends Fragment
 
             googleMap.setMyLocationEnabled(true);
         }
-
-
     }
 
     private void buildGoogleApiClient() {
-        googleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(), this)
-                .build();
+        //if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .enableAutoManage(getActivity(), this)
+                    .build();
+        Log.d(TAG, "setMyLocation: 구글api");
+        //}
         googleApiClient.connect();
+
     }
 
     public boolean checkLocationServicesStatus() {
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        Log.d(TAG, "setMyLocation: 체크");
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
@@ -326,7 +395,6 @@ public class PinDropFragment extends Fragment
             builder.create().show();
         }
 
-        LocationRequest locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(UPDATE_INTERVAL_MS);
         locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
@@ -337,6 +405,7 @@ public class PinDropFragment extends Fragment
 
                 LocationServices.FusedLocationApi
                         .requestLocationUpdates(googleApiClient, locationRequest, this);
+                Log.d(TAG, "setMyLocation: 이프");
             }
         } else {
             LocationServices.FusedLocationApi
@@ -344,6 +413,7 @@ public class PinDropFragment extends Fragment
 
             this.googleMap.getUiSettings().setCompassEnabled(true);
             this.googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+            Log.d(TAG, "setMyLocation: 엘스");
         }
 
     }
@@ -373,6 +443,7 @@ public class PinDropFragment extends Fragment
     public void onLocationChanged(Location location) {
         Log.i(TAG, "onLocationChanged call..");
         searchCurrentPlaces();
+        Log.d(TAG, "setMyLocation: onlocationchange");
     }
 
     private void searchCurrentPlaces() {
@@ -387,13 +458,15 @@ public class PinDropFragment extends Fragment
                 LikelyPlaceNames = new String[MAXENTRIES];
                 LikelyAddresses = new String[MAXENTRIES];
                 LikelyAttributions = new String[MAXENTRIES];
-                LikelyLatLngs = new LatLng[MAXENTRIES];
+                LikelyLatLngs = new LatLng[MAXENTRIES];;
 
                 for(PlaceLikelihood placeLikelihood : placeLikelihoods) {
+                    Log.d(TAG, "setMyLocation: searchcurrent Test");
                     LikelyPlaceNames[i] = (String) placeLikelihood.getPlace().getName();
                     LikelyAddresses[i] = (String) placeLikelihood.getPlace().getAddress();
                     LikelyAttributions[i] = (String) placeLikelihood.getPlace().getAttributions();
                     LikelyLatLngs[i] = placeLikelihood.getPlace().getLatLng();
+                    Log.d(TAG, "onResult: " + LikelyAddresses.toString() + "\n" + LikelyPlaceNames.toString() + "\n" + LikelyAttributions.toString() + "\n" + LikelyLatLngs.toString());
 
                     i++;
                     if(i > MAXENTRIES - 1 ) {
@@ -406,6 +479,8 @@ public class PinDropFragment extends Fragment
                 Location location = new Location("");
                 location.setLatitude(LikelyLatLngs[0].latitude);
                 location.setLongitude(LikelyLatLngs[0].longitude);
+                //location.setLatitude(DEFAULT_LOCATION.latitude);
+                //location.setLatitude(DEFAULT_LOCATION.longitude);
 
                 setCurrentLocation(location, LikelyPlaceNames[0], LikelyAddresses[0]);
             }
