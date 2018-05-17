@@ -19,9 +19,15 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -38,8 +44,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import static java.sql.DriverManager.println;
 
 
 public class GpsActivity extends AppCompatActivity
@@ -67,6 +77,13 @@ public class GpsActivity extends AppCompatActivity
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
 
+    String markerTitle;
+    String markerSnippet;
+    String makerlat;
+    String makerlong;
+
+    Location location;
+
     LocationRequest locationRequest = new LocationRequest()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
             .setInterval(UPDATE_INTERVAL_MS)
@@ -79,7 +96,7 @@ public class GpsActivity extends AppCompatActivity
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_gps);
 
 
         Log.d(TAG, "onCreate");
@@ -96,6 +113,18 @@ public class GpsActivity extends AppCompatActivity
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                MarkerOptions marker = new MarkerOptions().position(
+                        new LatLng(latLng.latitude, latLng.longitude)).title("New Marker");
+
+                mGoogleMap.addMarker(marker);
+
+                System.out.println(latLng.latitude+"---"+ latLng.longitude);
+            }
+        });
     }
 
 
@@ -231,9 +260,12 @@ public class GpsActivity extends AppCompatActivity
 
         Log.d(TAG, "onLocationChanged : ");
 
-        String markerTitle = getCurrentAddress(currentPosition);
-        String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
+        markerTitle = getCurrentAddress(currentPosition);
+        markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                 + " 경도:" + String.valueOf(location.getLongitude());
+        makerlat = String.valueOf(location.getLatitude());
+        makerlong = String.valueOf(location.getLongitude());
+
 
         //현재 위치에 마커 생성하고 이동
         setCurrentLocation(location, markerTitle, markerSnippet);
@@ -241,6 +273,44 @@ public class GpsActivity extends AppCompatActivity
         mCurrentLocatiion = location;
     }
 
+    public void onButton2Clicked(View v) {
+        String url =  "http://172.20.10.3:3000/process/gps";
+
+
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            println("onResponse() 호출됨 : " + response);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String>  params = new HashMap<>();
+
+                params.put("makerlat", makerlat);
+                params.put("makerlong", makerlong);
+
+                return params;
+            }
+        };
+
+        request.setShouldCache(true);
+        Volley.newRequestQueue(this).add(request);
+        println("웹서버에 요청함 : " + url);
+
+    }
 
     @Override
     protected void onStart() {

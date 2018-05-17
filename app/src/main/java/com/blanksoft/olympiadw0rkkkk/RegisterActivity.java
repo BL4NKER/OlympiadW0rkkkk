@@ -41,8 +41,9 @@ public class RegisterActivity extends AppCompatActivity {
                         try
                         {
                             JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
-                            if (success){
+                            String a = response;
+                            //boolean success = jsonResponse.getBoolean("success");
+                            if (jsonResponse.equals("0")){
                                 AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
                                 builder.setMessage("회원등록에 성공했습니다")
                                         .setPositiveButton("확인",null)

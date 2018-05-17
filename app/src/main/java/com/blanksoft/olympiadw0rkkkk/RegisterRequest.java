@@ -12,7 +12,7 @@ import java.util.Map;
  */
 
 public class RegisterRequest extends StringRequest {
-     final static private String URL = "http://172.30.1.26:3000/process/adduser";
+     final static private String URL = "http://172.20.10.3:3000/process/adduser";
      private Map<String,String> parameters;
 
      public RegisterRequest(String userID, String userPassword, String usernickname , Response.Listener<String> listener ) {
