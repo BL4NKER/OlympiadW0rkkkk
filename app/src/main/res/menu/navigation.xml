@@ -16,4 +16,13 @@
         android:icon="@drawable/ic_insert_chart_black_24dp"
         android:title="@string/랭킹" />
 
+    <item
+        android:id="@+id/navigation_my_profile"
+        android:icon="@drawable/ic_insert_chart_black_24dp"
+        android:title="@string/프로필" />
+
+
+
+
+
 </menu>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.blanksoft.olympiadw0rkkkk.QuestRegister">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="76dp"
+            android:layout_height="119dp"
+            app:srcCompat="@android:drawable/ic_menu_camera"
+            tools:layout_editor_absoluteX="30dp"
+            tools:layout_editor_absoluteY="73dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/QRtv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="퀘스트 등록하기"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="95dp" />
+
+            <EditText
+                android:id="@+id/QNet"
+                android:layout_width="218dp"
+                android:layout_height="56dp"
+                android:ems="10"
+                android:hint="퀘스트 제목"
+                android:inputType="textPersonName"
+                tools:layout_editor_absoluteX="119dp"
+                tools:layout_editor_absoluteY="72dp" />
+
+            <EditText
+                android:id="@+id/QCet"
+                android:layout_width="match_parent"
+                android:layout_height="94dp"
+                android:ems="10"
+                android:hint="내용"
+                android:inputType="textPersonName"
+                tools:layout_editor_absoluteX="30dp"
+                tools:layout_editor_absoluteY="205dp" />
+
+            <EditText
+                android:id="@+id/QSet"
+                android:layout_width="match_parent"
+                android:layout_height="89dp"
+                android:ems="10"
+                android:hint="해결방향"
+                android:inputType="textPersonName"
+                tools:layout_editor_absoluteX="30dp"
+                tools:layout_editor_absoluteY="305dp" />
+
+            <EditText
+                android:id="@+id/QLet"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:hint="등록 위치"
+                android:inputType="textPersonName"
+                app:layout_constraintTop_toBottomOf="@+id/QNet"
+                tools:layout_editor_absoluteX="119dp" />
+
+            <Button
+                android:id="@+id/take"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginLeft="28dp"
+                android:text="Button"
+                app:layout_constraintLeft_toLeftOf="parent"
+                tools:layout_editor_absoluteY="164dp" />
+
+            <Button
+                android:id="@+id/QRbtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="등록"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                tools:layout_editor_absoluteY="413dp" />
+
+            <Button
+                android:id="@+id/take2"
+                android:layout_width="277dp"
+                android:layout_height="31dp"
+                android:text="Button" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

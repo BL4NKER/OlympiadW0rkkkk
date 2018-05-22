@@ -14,6 +14,7 @@ import android.widget.TextView;
 public class MainActivity extends FragmentActivity {
 
 
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -34,6 +35,9 @@ public class MainActivity extends FragmentActivity {
                 case R.id.navigation_ranking_chart:
                     transaction.replace(R.id.content, new RankingFragment()).commit();
                     return true;
+                /*case  R.id.navigation_my_profile:
+                    transaction.replace(R.id.content, new MyProfileFragment()).commit();
+                    return  true;*/
             }
             return false;
         }
