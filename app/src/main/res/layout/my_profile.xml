@@ -8,13 +8,31 @@
         android:text="사진찍기"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/btn_album"
-        android:text="앨범열기"
+        android:layout_width="197dp"
+        android:layout_height="wrap_content"
+        android:text="앨범열기" />
+
+    <TextView
+        android:id="@+id/PNtv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="(실명)" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="(dd)" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
     <ImageView
         android:id="@+id/iv_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="350dp"
+        android:layout_height="350dp" />
 </LinearLayout>

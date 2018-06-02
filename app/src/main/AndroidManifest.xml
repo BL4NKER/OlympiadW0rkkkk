@@ -57,10 +57,6 @@
             android:label="@string/app_name" />
         <activity android:name=".GpsActivity">
         </activity>
-        <activity android:name=".epepepep" >
-
-
-        </activity>
 
         <activity android:name=".MyProfile">
 
