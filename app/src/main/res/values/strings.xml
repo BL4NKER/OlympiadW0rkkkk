@@ -17,4 +17,5 @@
     <string name="홈">홈</string>
 
     <string name="facebook_app_id">2049903541894471</string>
+    <string name="title_activity_facebook_share">FacebookShare</string>
 </resources>
