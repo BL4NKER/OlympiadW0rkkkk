@@ -13,5 +13,12 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="240dp"
-        android:text="Button" />
+        android:text="페이스북" />
+
+    <Button
+        android:id="@+id/kakaoshare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="97dp"
+        android:text="카카오" />
 </RelativeLayout>

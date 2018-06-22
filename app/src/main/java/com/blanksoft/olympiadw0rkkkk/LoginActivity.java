@@ -18,6 +18,8 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONObject;
 
@@ -31,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        FirebaseInstanceId.getInstance().getToken();
         loginButton = (LoginButton)findViewById(R.id.login_button);
         textView = (TextView) findViewById(R.id.tv);
         callbackManager = CallbackManager.Factory.create();
